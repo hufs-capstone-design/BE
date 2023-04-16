@@ -19,7 +19,7 @@ public class SwaggerConfig {
         // Swagger Ui 문서 상 표시할 정보들
         Info info = new Info()
                 .version("v0.0.1")
-                .title("HUfS Capstone Design \uD83D\uDECE") // 문서 제목
+                .title("HUFS Capstone Design \uD83D\uDECE") // 문서 제목
                 .description("HUfS Capstone Design 프로젝트 API 명세서입니다."); // 문서 설명
 
 /*         Swagger UI에서 요청 시 Token을 Header에 담아 보내기 위한 설정
