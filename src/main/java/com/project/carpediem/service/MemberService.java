@@ -1,5 +1,6 @@
 package com.project.carpediem.service;
 
+import com.project.carpediem.dto.request.LoginRequestDto;
 import com.project.carpediem.dto.request.SignupRequestDto;
 import com.project.carpediem.dto.response.MessageResponseDto;
 import com.project.carpediem.entity.Member;
@@ -33,8 +34,13 @@ public class MemberService {
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
         signupRequestDto.setPassword(passwordEncoder.encode(signupRequestDto.getPassword()));
-        Optional<Member> found = memberRepository.findByEmail(email);
-        if (found.isPresent()) {
+        Optional<Member> findEmail = memberRepository.findByEmail(email);
+        if (findEmail.isPresent()) {
+            throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
+        }
+
+        Optional<Member> findStudentNum = memberRepository.findByStudentNum(studentNum);
+        if (findStudentNum.isPresent()) {
             throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
         }
 
@@ -44,5 +50,24 @@ public class MemberService {
         return ResponseEntity.ok()
                 .body(MessageResponseDto.of(HttpStatus.OK.value(), "회원가입 성공"));
     }
+
+    public ResponseEntity<MessageResponseDto> login(LoginRequestDto loginRequestDto, HttpServletResponse response){
+        Long studentNum = loginRequestDto.getStudentNum();
+        String password = loginRequestDto.getPassword();
+
+        Optional<Member> foundMember = memberRepository.findByStudentNum(studentNum);
+        if(foundMember.isEmpty()){
+            throw new IllegalArgumentException("존재하지 않는 사용자 입니다.");
+        }
+
+        if(!passwordEncoder.matches(password, foundMember.get().getPassword())){
+            throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
+        }
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER,jwtUtil.createToken(foundMember.get().getEmail()));
+
+        return ResponseEntity.ok()
+                .body(MessageResponseDto.of(HttpStatus.OK.value(), "로그인 성공"));
+    }
+
 
 }

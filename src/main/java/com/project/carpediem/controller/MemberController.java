@@ -1,6 +1,7 @@
 package com.project.carpediem.controller;
 
 
+import com.project.carpediem.dto.request.LoginRequestDto;
 import com.project.carpediem.dto.request.SignupRequestDto;
 import com.project.carpediem.dto.response.MessageResponseDto;
 import com.project.carpediem.service.MemberService;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -21,6 +24,11 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<MessageResponseDto> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
         return memberService.signup(signupRequestDto);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<MessageResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+        return memberService.login(loginRequestDto,response);
     }
 
 }
