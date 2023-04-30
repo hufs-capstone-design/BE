@@ -28,23 +28,23 @@ public class MemberService {
 
     public ResponseEntity<MessageResponseDto> signup(SignupRequestDto signupRequestDto) {
 
-        String memberName = signupRequestDto.getMemberName();
-        Long studentNum = signupRequestDto.getStudentNum();
-        String email = signupRequestDto.getEmail();
+//        String memberName = signupRequestDto.getMemberName();
+        String studentNum = signupRequestDto.getStudentNum();
+//        String email = signupRequestDto.getEmail();
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
         signupRequestDto.setPassword(passwordEncoder.encode(signupRequestDto.getPassword()));
-        Optional<Member> findEmail = memberRepository.findByEmail(email);
-        if (findEmail.isPresent()) {
-            throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
-        }
+//        Optional<Member> findEmail = memberRepository.findByEmail(email);
+//        if (findEmail.isPresent()) {
+//            throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
+//        }
 
         Optional<Member> findStudentNum = memberRepository.findByStudentNum(studentNum);
         if (findStudentNum.isPresent()) {
             throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
         }
 
-        Member member = Member.of(studentNum, memberName, email, password);
+        Member member = Member.of(studentNum, password);
         memberRepository.save(member);
 
         return ResponseEntity.ok()
@@ -52,7 +52,7 @@ public class MemberService {
     }
 
     public ResponseEntity<MessageResponseDto> login(LoginRequestDto loginRequestDto, HttpServletResponse response){
-        Long studentNum = loginRequestDto.getStudentNum();
+        String studentNum = loginRequestDto.getStudentNum();
         String password = loginRequestDto.getPassword();
 
         Optional<Member> foundMember = memberRepository.findByStudentNum(studentNum);
@@ -63,7 +63,7 @@ public class MemberService {
         if(!passwordEncoder.matches(password, foundMember.get().getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER,jwtUtil.createToken(foundMember.get().getEmail()));
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER,jwtUtil.createToken(foundMember.get().getStudentNum()));
 
         return ResponseEntity.ok()
                 .body(MessageResponseDto.of(HttpStatus.OK.value(), "로그인 성공"));
