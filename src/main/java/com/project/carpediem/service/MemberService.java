@@ -28,16 +28,10 @@ public class MemberService {
 
     public ResponseEntity<MessageResponseDto> signup(SignupRequestDto signupRequestDto) {
 
-//        String memberName = signupRequestDto.getMemberName();
         String studentNum = signupRequestDto.getStudentNum();
-//        String email = signupRequestDto.getEmail();
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
         signupRequestDto.setPassword(passwordEncoder.encode(signupRequestDto.getPassword()));
-//        Optional<Member> findEmail = memberRepository.findByEmail(email);
-//        if (findEmail.isPresent()) {
-//            throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
-//        }
 
         Optional<Member> findStudentNum = memberRepository.findByStudentNum(studentNum);
         if (findStudentNum.isPresent()) {

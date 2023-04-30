@@ -21,12 +21,6 @@ public class Member {
     @Column(nullable = false)
     private String studentNum;
 
-//    @Column(nullable = false, length = 20)
-//    private String memberName;
-//
-//    @Column(nullable = false, length = 50)
-//    private String email;
-
     @Column(nullable = false)
     private String password;
 
@@ -34,8 +28,6 @@ public class Member {
     @Builder
     private Member(String studentNum, String password) {
         this.studentNum = studentNum;
-//        this.memberName = memberName;
-//        this.email = email;
         this.password = password;
 
     }
@@ -43,8 +35,6 @@ public class Member {
     public static Member of(String studentNum, String password) {
         return Member.builder()
                 .studentNum(studentNum)
-//                .memberName(memberName)
-//                .email(email)
                 .password(password)
                 .build();
     }
