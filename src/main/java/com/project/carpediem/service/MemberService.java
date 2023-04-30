@@ -35,7 +35,7 @@ public class MemberService {
 
         Optional<Member> findStudentNum = memberRepository.findByStudentNum(studentNum);
         if (findStudentNum.isPresent()) {
-            throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
+            throw new IllegalArgumentException("중복된 학번이 존재합니다.");
         }
 
         Member member = Member.of(studentNum, password);
